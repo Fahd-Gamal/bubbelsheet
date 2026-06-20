@@ -1214,3 +1214,9 @@ RESPONSIVE MISC
         filter: none;
     }
 }
+/* FIX MOBILE OVERFLOW */
+html,
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
