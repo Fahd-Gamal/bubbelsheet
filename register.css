@@ -281,10 +281,54 @@ body {
 
 /* Footer Link */
 .login-link {
-    margin-top: 1.5rem;
     text-align: center;
+    margin-top: 18px;
 }
 
+.login-link a {
+    text-decoration: none;
+    font-size: 15px;
+    color: #64748b;
+    /* هل لديك حساب بالفعل */
+    transition: all .3s ease;
+}
+.login-link a {
+    color: #6b7280;
+}
+
+.login-link a strong {
+    background: linear-gradient(135deg, #172D9D, #00A9F2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.login-link a:hover {
+    color: #475569;
+}
+
+.login-link a:hover strong {
+    color: #00A9F2;
+    text-shadow: 0 0 12px rgba(0, 169, 242, .35);
+}
+/* Dark Mode */
+body.dark .login-link a {
+    color: #fff;
+    /* النص العادي */
+}
+
+body.dark .login-link a strong {
+    color: #a78bfa;
+    /* سماوي نيون */
+    font-weight: 800;
+}
+
+body.dark .login-link a:hover strong {
+    color: #48BED9;
+    text-shadow:
+        0 0 8px rgba(0, 226, 224, .5),
+        0 0 18px rgba(0, 226, 224, .3);
+}
 .glass-link {
     display: inline-block;
     padding: 0.8rem 2rem;
@@ -294,7 +338,7 @@ body {
     border-radius: 12px;
     color: #fff;
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 18px;
     transition: all 0.3s ease;
 }
 
@@ -1133,61 +1177,82 @@ fieldset.is-valid .field-feedback:not(:empty)::before {
 /* ---------------------------------------------------------------------- */
 /* GENDER RADIO PILLS                                                       */
 /* ---------------------------------------------------------------------- */
-.field-legend {
-    font-size: .85rem;
+/* =========================
+   Gender Selection
+========================= */
+
+.gender-group {
+    margin-bottom: 20px;
+}
+
+.gender-title {
+    display: block;
+    margin-bottom: 12px;
     font-weight: 600;
-    color: var(--text-soft);
-    margin-bottom: .5rem;
-    padding: 0;
+    color: var(--text-color);
 }
 
 .gender-options {
     display: flex;
-    gap: .75rem;
-    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
 }
 
-.gender-input {
-    position: absolute;
-    opacity: 0;
-    width: 1px;
-    height: 1px;
-    pointer-events: none;
-}
+.gender-card {
+    flex: 1;
+    min-height: 64px;
 
-.gender-pill {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: .5rem;
-    padding: .7rem 1.25rem;
-    font-size: .92rem;
-    font-weight: 600;
-    color: var(--text-soft);
+    justify-content: center;
+    gap: 10px;
+
     cursor: pointer;
-    transition: all var(--speed-fast) var(--ease);
-    user-select: none;
+
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .15);
+
+    background: rgba(255, 255, 255, .08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    transition: .3s ease;
+    position: relative;
 }
 
-.gender-pill:hover {
-    color: var(--text);
-    transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--primary) 40%, var(--surfaceBorder));
+.gender-card:hover {
+    transform: translateY(-2px);
 }
 
-.gender-input:checked+.gender-pill {
-    color: #fff;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    border-color: transparent;
-    box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--primary) 60%, transparent);
+.gender-card input {
+    display: none;
 }
 
-.gender-input:focus-visible+.gender-pill {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
+.gender-icon {
+    font-size: 18px;
 }
 
-fieldset.is-invalid .gender-pill {
-    border-color: #ff6b81;
+.gender-card:has(input:checked) {
+    border-color: #00A9F2;
+    background: rgba(0, 169, 242, .15);
+    box-shadow: 0 0 0 2px rgba(0, 169, 242, .2);
+}
+
+.gender-card:has(input:checked) .gender-icon {
+    color: #00A9F2;
+}
+
+/* Mobile */
+
+@media (max-width: 576px) {
+
+    .gender-options {
+        flex-direction: column;
+    }
+
+    .gender-card {
+        min-height: 56px;
+    }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1484,4 +1549,100 @@ fieldset.is-invalid .gender-pill {
     .hero-features {
         display: none;
     }
+}
+/* ==========================
+PREMIUM LIGHT FORM ONLY
+========================== */
+
+body:not(.dark) .glass-card {
+    background: rgba(255, 255, 255, .82);
+
+    border: 1px solid rgba(255, 255, 255, .7);
+
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+
+    box-shadow:
+        0 30px 80px rgba(23, 45, 157, .10),
+        0 10px 25px rgba(0, 169, 242, .08),
+        inset 0 1px 0 rgba(255, 255, 255, .9);
+}
+
+body:not(.dark) .form-control,
+body:not(.dark) .form-select {
+
+    background: rgba(255,255,255,.75);
+
+    border: 1px solid rgba(23,45,157,.08);
+
+    color: #172D9D;
+}
+
+body:not(.dark) .form-control::placeholder {
+    color: rgba(23,45,157,.45);
+}
+
+body:not(.dark) .form-control:focus,
+body:not(.dark) .form-select:focus {
+
+    background: #fff;
+
+    border-color: #00A9F2;
+
+    box-shadow:
+        0 0 0 5px rgba(0,169,242,.10),
+        0 12px 30px rgba(0,169,242,.15);
+
+    transform: translateY(-2px);
+}
+
+body:not(.dark) .input-icon,
+body:not(.dark) .password-toggle {
+    color: #172D9D;
+}
+
+body:not(.dark) .glass-card h2 {
+    color: #172D9D;
+    text-shadow: none;
+}
+
+body:not(.dark) .subtitle {
+    color: #5B6B9B;
+}
+
+body:not(.dark) .gender-card {
+    background: rgba(255,255,255,.7);
+
+    border: 1px solid rgba(23,45,157,.08);
+}
+
+body:not(.dark) .gender-card:hover {
+    background: rgba(255,255,255,.95);
+}
+
+body:not(.dark) .gender-card:has(input:checked) {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,169,242,.12),
+            rgba(120,124,254,.12)
+        );
+
+    border-color: #00A9F2;
+}
+
+body:not(.dark) .btn-register2,
+body:not(.dark) .btn-glass-primary {
+
+    background:
+        linear-gradient(
+            135deg,
+            #00E2E0,
+            #00A9F2 50%,
+            #787CFE
+        );
+
+    box-shadow:
+        0 15px 35px rgba(0,169,242,.25);
 }
