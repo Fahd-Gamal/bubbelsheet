@@ -113,9 +113,7 @@ const fatherphone = document.getElementById('fatherphone');
 const password = document.getElementById('password');
 const confirmPassword = document.getElementById('confirmPassword');
 
-const API_URL = 'http://www.bublesheet.somee.com';
-
-
+const API_URL = 'https://bubblesheet.runasp.net';
 
 form.addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -144,7 +142,13 @@ form.addEventListener('submit', async function (e) {
         school.closest('.form-group').classList.add('error');
         isValid = false;
     }
+    // Validate gender
+    const selectedGender = document.querySelector('input[name="gender"]:checked');
 
+    if (!selectedGender) {
+        document.querySelector('.gender-group').classList.add('error');
+        isValid = false;
+    }
     // Validate Email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.value.trim())) {
@@ -179,13 +183,14 @@ form.addEventListener('submit', async function (e) {
         const registerData = {
             name: `${firstName.value.trim()} ${lastName.value.trim()}`,
             password: password.value,
-            confirmPassword: confirmPassword.value,
+            confarimPassword: confirmPassword.value,
             email: email.value.trim(),
             phoneNumber: phone.value.trim(),
             school: document.getElementById('school').value,
-            gender: true,
+            gender: selectedGender.value === 'true',
             parentphoneNumber: fatherphone.value.trim()
         };
+        console.log(registerData);
         try {
             const response = await fetch(
                 `${API_URL}/api/Account/Register`,
@@ -197,25 +202,19 @@ form.addEventListener('submit', async function (e) {
                     body: JSON.stringify(registerData)
                 }
             );
+            const result = await response.text();
 
-            const result = await response.json();
-
-            if (response.ok) {
-
-                alert('تم إنشاء الحساب بنجاح');
-
-                console.log(result);
-
-                form.reset();
-
-            } else {
-                console.log(registerData)
-                alert(result.message || 'فشل إنشاء الحساب');
-
-                console.log(result);
-
-            }
-
+        if (response.ok) {
+            alert('تم إنشاء الحساب بنجاح');
+            form.reset();
+            window.location.href = 'login.html';
+        } else {
+            alert(
+                result.message ||
+                JSON.stringify(result.errors) ||
+                'فشل إنشاء الحساب'
+            );
+        }
         } catch (error) {
 
             console.error(error);
