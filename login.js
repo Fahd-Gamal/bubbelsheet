@@ -140,10 +140,10 @@ form.addEventListener('submit', async function (e) {
                 password: password.value.trim()
             })
         });
-        const data = await response.json();
+        const data = await response.text();
         if (response.ok) {
             // حفظ الـ Access Token في الرام فقط
-            accessToken = data.token;
+            accessToken = data;
             console.log("Access Token:", accessToken);
             // الانتقال للصفحة الرئيسية
             // window.location.href = "home.html";
