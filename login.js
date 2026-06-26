@@ -81,66 +81,92 @@ if (heroPane && window.matchMedia('(pointer: fine)').matches) {
         if (illustration) illustration.style.transform = '';
     });
 }
-
-// Password Toggle Functionality
+/* ----------------------------------------------------------------- */
+/* GLOBAL VARIABLES                                                   */
+/* ----------------------------------------------------------------- */
+const api = "https://bubblesheet.runasp.net/api";
+// Access Token (في الرام فقط)
+let accessToken = null;
+/* ----------------------------------------------------------------- */
+/* PASSWORD TOGGLE                                                    */
+/* ----------------------------------------------------------------- */
 const togglePassword = document.getElementById('togglePassword');
 const passwordInput = document.getElementById('password');
 
 togglePassword.addEventListener('click', function () {
-    const type = passwordInput.type === 'password' ? 'text' : 'password';
-    passwordInput.type = type;
+    passwordInput.type =
+        passwordInput.type === 'password'
+            ? 'text'
+            : 'password';
     this.classList.toggle('fa-eye');
     this.classList.toggle('fa-eye-slash');
 });
 
-// Form Validation
+/* ----------------------------------------------------------------- */
+/* LOGIN                                                              */
+/* ----------------------------------------------------------------- */
+
 const form = document.getElementById('loginForm');
 const email = document.getElementById('email');
 const password = document.getElementById('password');
 
-form.addEventListener('submit', function (e) {
+form.addEventListener('submit', async function (e) {
     e.preventDefault();
-
     let isValid = true;
-
-    // Clear previous errors
     document.querySelectorAll('.form-group').forEach(group => {
         group.classList.remove('error');
     });
 
-    // Validate Email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (!emailRegex.test(email.value.trim())) {
         email.closest('.form-group').classList.add('error');
         isValid = false;
     }
-
-    // Validate Password
     if (password.value.trim() === '') {
         password.closest('.form-group').classList.add('error');
         isValid = false;
     }
-
-    // If form is valid
-    if (isValid) {
-        const rememberMe = document.getElementById('rememberMe').checked;
-        alert('Login Successful!\n\nEmail: ' + email.value + '\nRemember me: ' + (rememberMe ? 'Yes' : 'No'));
-        form.reset();
+    if (!isValid) return;
+    try {
+        const response = await fetch(`${api}/Account/Login`, {
+            method: 'POST',
+            credentials: 'include', // لاستقبال Refresh Cookie
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email.value.trim(),
+                password: password.value.trim()
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            // حفظ الـ Access Token في الرام فقط
+            accessToken = data.token;
+            console.log("Access Token:", accessToken);
+            // الانتقال للصفحة الرئيسية
+            // window.location.href = "home.html";
+        } else {
+            alert(data.message || "بيانات الدخول غير صحيحة");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("حدث خطأ في الاتصال بالسيرفر");
     }
 });
+/* ----------------------------------------------------------------- */
+/* API REQUEST HELPER                                                 */
+/* ----------------------------------------------------------------- */
 
-// Real-time validation
-email.addEventListener('blur', function () {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (this.value.trim() !== '' && !emailRegex.test(this.value.trim())) {
-        this.closest('.form-group').classList.add('error');
-    } else {
-        this.closest('.form-group').classList.remove('error');
-    }
-});
+async function apiRequest(endpoint, options = {}) {
+    return await fetch(`${api}${endpoint}`, {
+        ...options,
+        credentials: 'include',
+        headers: {
+            ...(options.headers || {}),
+            Authorization: `Bearer ${accessToken}`
+        }
+    });
 
-password.addEventListener('input', function () {
-    if (this.value.trim() !== '') {
-        this.closest('.form-group').classList.remove('error');
-    }
-});
+}
