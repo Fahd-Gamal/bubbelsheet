@@ -44,32 +44,42 @@
     }, { threshold: .4 });
     document.querySelectorAll('[data-count]').forEach(el => obs.observe(el));
 })();
-
 /* =============================================
-    4. INFINITE SCHOOL SLIDER
-    ============================================= */
-(function () {
-    const schools = [
-        { n: 'أكاديمية النور', a: 'NR', c: '#172D9D' },
-        { n: 'مدرسة القادة', a: 'QD', c: '#787CFE' },
-        { n: 'معهد الأفق', a: 'AF', c: '#00A9F2' },
-        { n: 'مدرسة الفكر', a: 'FK', c: '#48BED9' },
-        { n: 'أكاديمية المستقبل', a: 'MS', c: '#172D9D' },
-        { n: 'مدرسة الرواد', a: 'RW', c: '#00E2E0' },
-        { n: 'أكاديمية التميز', a: 'TM', c: '#787CFE' },
-        { n: 'مدرسة الأزهر', a: 'AZ', c: '#00A9F2' },
-        { n: 'معهد الشروق', a: 'SR', c: '#48BED9' },
-        { n: 'مدرسة المعرفة', a: 'MR', c: '#172D9D' },
-        { n: 'أكاديمية الإبداع', a: 'IB', c: '#787CFE' },
-        { n: 'مدرسة الأمل', a: 'AM', c: '#00A9F2' },
-    ];
+4. INFINITE SCHOOL SLIDER
+============================================= */
+/* =============================================
+4. INFINITE SCHOOL SLIDER
+============================================= */
+const api = 'https://bubblesheet.runasp.net/api';
+(async function () {
+
     const track = document.getElementById('stk');
     if (!track) return;
-    function chip(s) {
-        const d = document.createElement('div');
-        d.className = 'school-chip';
-        d.innerHTML = `<div class="chip-logo" style="background:${s.c}18;color:${s.c};border:1px solid ${s.c}35">${s.a}</div><span class="chip-name">${s.n}</span>`;
-        return d;
+
+    try {
+        const response = await fetch(`${api}/Ad/get-ads`);
+        const schools = await response.json();
+        function chip(s) {
+            const d = document.createElement('div');
+            d.className = 'school-chip';
+            d.innerHTML = `
+                <div class="chip-logo">
+                    <img src="${s.imgLink}" alt="${s.name}">
+                </div>
+                <span class="chip-name">
+                    ${s.name}
+                </span>
+            `;
+            return d;
+        }
+        [...schools].forEach(s => {
+            track.appendChild(chip(s));
+        });
+    } catch (error) {
+        console.error("Schools API Error:", error);
     }
-    [...schools, ...schools].forEach(s => track.appendChild(chip(s)));
 })();
+function register()
+{
+    window.location.href = "login.html";
+}
